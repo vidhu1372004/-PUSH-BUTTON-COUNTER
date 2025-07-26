@@ -1,0 +1,32 @@
+#include <LiquidCrystal.h>
+LiquidCrystal lcd(7, 6, 5, 4, 3, 2);
+const int sensor = A0;      
+const int buttonPin = 8;    
+int count = 0;
+int lastButtonState = 0;
+void setup() {
+  pinMode(buttonPin, INPUT);
+  lcd.begin(16, 2);
+  lcd.print("Starting...");
+  delay(1000);
+  lcd.clear();
+}
+void loop() {
+  int buttonState = digitalRead(buttonPin);
+  if (buttonState == HIGH && lastButtonState == LOW) {
+    count++;
+    if (count > 9) count = 0;
+  }
+  lastButtonState = buttonState;
+  float voltage = analogRead(sensor) * (5.0 / 1023.0);
+  float temperatureC = (voltage - 0.5) * 100.0;
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Count: ");
+  lcd.print(count);
+  lcd.setCursor(0, 1);
+  lcd.print("Temp: ");
+  lcd.print(temperatureC, 1);
+  lcd.print(" C");
+  delay(300);  
+}
